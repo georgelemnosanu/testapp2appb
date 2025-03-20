@@ -6,7 +6,17 @@ using System.Web;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 app.Urls.Add("http://0.0.0.0:8080");
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
+app.UseCors();
 app.MapGet("/deeplink", async (HttpContext context) =>
 {
     var query = context.Request.Query;
