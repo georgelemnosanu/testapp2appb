@@ -4,8 +4,8 @@ using Microsoft.Extensions.Hosting;
 using System.Web;
 
 var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
-app.Urls.Add("http://0.0.0.0:8080");
+
+// Adaugă serviciile CORS ÎNAINTE de builder.Build()
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -16,33 +16,36 @@ builder.Services.AddCors(options =>
     });
 });
 
+var app = builder.Build();
+app.Urls.Add("http://0.0.0.0:8080");
+
+// Utilizează CORS middleware ÎNAINTE de a mapa rute
 app.UseCors();
+
 app.MapGet("/deeplink", async (HttpContext context) =>
 {
+    Console.WriteLine("Cerere primită la endpoint-ul /deeplink");
+
     var query = context.Request.Query;
     string token = query.ContainsKey("token") ? query["token"].ToString() : "defaultToken";
     string videoId = query.ContainsKey("videoId") ? query["videoId"].ToString() : "dQw4w9WgXcQ";
-
     string appScheme = $"youtube://www.youtube.com/watch?v={HttpUtility.UrlEncode(videoId)}";
 
- 
     string userAgent = context.Request.Headers["User-Agent"].ToString();
     string fallbackUrl;
-
     if (userAgent.Contains("Android"))
     {
-        fallbackUrl = "https://play.google.com/store/apps/details?id=com.google.android.youtube"; 
+        fallbackUrl = "https://play.google.com/store/apps/details?id=com.google.android.youtube";
     }
     else if (userAgent.Contains("iPhone") || userAgent.Contains("iPad"))
     {
-        fallbackUrl = "https://apps.apple.com/app/youtube/id544007664"; 
+        fallbackUrl = "https://apps.apple.com/app/youtube/id544007664";
     }
     else
     {
-        fallbackUrl = $"https://www.youtube.com/watch?v={HttpUtility.UrlEncode(videoId)}"; 
+        fallbackUrl = $"https://www.youtube.com/watch?v={HttpUtility.UrlEncode(videoId)}";
     }
 
-    
     string html = $@"
     <html>
         <head>
@@ -56,7 +59,6 @@ app.MapGet("/deeplink", async (HttpContext context) =>
             </script>
         </body>
     </html>";
-
     context.Response.ContentType = "text/html";
     await context.Response.WriteAsync(html);
 });
