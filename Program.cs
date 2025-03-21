@@ -5,7 +5,6 @@ using System.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adaugă serviciile CORS ÎNAINTE de builder.Build()
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -19,7 +18,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 app.Urls.Add("http://0.0.0.0:8080");
 
-// Utilizează CORS middleware ÎNAINTE de a mapa rute
+
 app.UseCors();
 
 app.MapGet("/deeplink", async (HttpContext context) =>
@@ -32,19 +31,7 @@ app.MapGet("/deeplink", async (HttpContext context) =>
     string appScheme = $"youtube://www.youtube.com/watch?v={HttpUtility.UrlEncode(videoId)}";
 
     string userAgent = context.Request.Headers["User-Agent"].ToString();
-    string fallbackUrl;
-    if (userAgent.Contains("Android"))
-    {
-        fallbackUrl = "https://play.google.com/store/apps/details?id=com.google.android.youtube";
-    }
-    else if (userAgent.Contains("iPhone") || userAgent.Contains("iPad"))
-    {
-        fallbackUrl = "https://apps.apple.com/app/youtube/id544007664";
-    }
-    else
-    {
-        fallbackUrl = $"https://www.youtube.com/watch?v={HttpUtility.UrlEncode(videoId)}";
-    }
+    string fallbackUrl = $"NU E NIMIC!";
 
     string html = $@"
     <html>
