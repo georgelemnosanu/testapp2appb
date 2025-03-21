@@ -26,8 +26,8 @@ app.MapGet("/deeplink", async (HttpContext context) =>
     Console.WriteLine("Cerere primită la endpoint-ul /deeplink");
 
     var query = context.Request.Query;
-    string phoneNumber = query.ContainsKey("phone") ? query["phone"].ToString() : "1234567890"; 
-    string message = query.ContainsKey("message") ? query["message"].ToString() : "Salut!"; 
+    string phoneNumber = query.ContainsKey("phone") ? query["phone"].ToString() : "0729813000"; 
+    string message = query.ContainsKey("message") ? query["message"].ToString() : "Salut, vezi ca merge?!"; 
 
     
     string appScheme = $"whatsapp://send?phone={HttpUtility.UrlEncode(phoneNumber)}&text={HttpUtility.UrlEncode(message)}";
