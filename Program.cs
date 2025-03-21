@@ -26,12 +26,14 @@ app.MapGet("/deeplink", async (HttpContext context) =>
     Console.WriteLine("Cerere primită la endpoint-ul /deeplink");
 
     var query = context.Request.Query;
-    string token = query.ContainsKey("token") ? query["token"].ToString() : "defaultToken";
-    string videoId = query.ContainsKey("videoId") ? query["videoId"].ToString() : "dQw4w9WgXcQ";
-    string appScheme = $"youtube://www.youtube.com/watch?v={HttpUtility.UrlEncode(videoId)}";
+    string phoneNumber = query.ContainsKey("phone") ? query["phone"].ToString() : "1234567890"; 
+    string message = query.ContainsKey("message") ? query["message"].ToString() : "Salut!"; 
 
-    string userAgent = context.Request.Headers["User-Agent"].ToString();
-    string fallbackUrl = $"NU E NIMIC!";
+    
+    string appScheme = $"whatsapp://send?phone={HttpUtility.UrlEncode(phoneNumber)}&text={HttpUtility.UrlEncode(message)}";
+
+   
+    string fallbackUrl = "https://web.whatsapp.com"; 
 
     string html = $@"
     <html>
