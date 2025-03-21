@@ -26,7 +26,7 @@ app.MapGet("/deeplink", async (HttpContext context) =>
     Console.WriteLine("Cerere primită la endpoint-ul /deeplink");
 
     var query = context.Request.Query;
-    string phoneNumber = query.ContainsKey("phone") ? query["phone"].ToString() : "0729813000"; 
+    string phoneNumber = query.ContainsKey("phone") ? query["phone"].ToString() : "+40729813000"; 
     string message = query.ContainsKey("message") ? query["message"].ToString() : "Salut, vezi ca merge?!"; 
 
     
